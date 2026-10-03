@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Practical 5 - Registration Form</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            padding: 30px;
+        }
+
+        .form-container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #aaa;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #aaa;
+            border-radius: 5px;
+        }
+
+        input.error {
+            border: 2px solid red;
+        }
+
+        input.success {
+            border: 2px solid green;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .success-message {
+            color: green;
+            text-align: center;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #555;
+        }
+
+        .terms {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .terms input {
+            width: auto;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="form-container">
+
+    <h1>Registration Form</h1>
+
+    <form id="registrationForm">
+
+        <!-- Name -->
+        <div class="form-group">
+            <label>Full Name</label>
+
+            <input type="text" id="name" placeholder="Enter your full name">
+
+            <div class="error-message" id="nameError"></div>
+        </div>
+
+
+        <!-- Email -->
+        <div class="form-group">
+
+            <label>Email</label>
+
+            <input type="text" id="email" placeholder="Enter your email">
+
+            <div class="error-message" id="emailError"></div>
+
+        </div>
+
+
+        <!-- Mobile -->
+        <div class="form-group">
+
+            <label>Mobile Number</label>
+
+            <input type="text" id="mobile" placeholder="Enter 10-digit mobile number">
+
+            <div class="error-message" id="mobileError"></div>
+
+        </div>
+
+
+        <!-- Age -->
+        <div class="form-group">
+
+            <label>Age</label>
+
+            <input type="number" id="age" placeholder="Enter your age">
+
+            <div class="error-message" id="ageError"></div>
+
+        </div>
+
+
+        <!-- Password -->
+        <div class="form-group">
+
+            <label>Password</label>
+
+            <input type="password" id="password" placeholder="Enter password">
+
+            <div class="error-message" id="passwordError"></div>
+
+        </div>
+
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+
+            <label>Confirm Password</label>
+
+            <input type="password" id="confirmPassword"
+                   placeholder="Confirm password">
+
+            <div class="error-message" id="confirmPasswordError"></div>
+
+        </div>
+
+
+        <!-- Terms -->
+        <div class="form-group terms">
+
+            <input type="checkbox" id="terms">
+
+            <label for="terms">
+                I agree to the Terms and Conditions
+            </label>
+
+        </div>
+
+        <div class="error-message" id="termsError"></div>
+
+
+        <button type="submit">Register</button>
+
+        <div class="success-message" id="successMessage"></div>
+
+    </form>
+
+</div>
+
+
+<script>
+
+    const form = document.getElementById("registrationForm");
+
+    form.addEventListener("submit", function(event) {
+
+        event.preventDefault();
+
+        // Clear previous messages
+        clearErrors();
+
+        let isValid = true;
+
+
+        // Name validation
+        const name = document.getElementById("name").value.trim();
+
+        if (name === "") {
+
+            showError("name", "nameError",
+                "Please enter your full name.");
+
+            isValid = false;
+
+        } else if (name.length < 3) {
+
+            showError("name", "nameError",
+                "Name must contain at least 3 characters.");
+
+            isValid = false;
+        }
+
+
+        // Email validation
+        const email = document.getElementById("email").value.trim();
+
+        const emailPattern =
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (email === "") {
+
+            showError("email", "emailError",
+                "Please enter your email.");
+
+            isValid = false;
+
+        } else if (!emailPattern.test(email)) {
+
+            showError("email", "emailError",
+                "Please enter a valid email address.");
+
+            isValid = false;
+        }
+
+
+        // Mobile validation
+        const mobile =
+            document.getElementById("mobile").value.trim();
+
+        const mobilePattern = /^[0-9]{10}$/;
+
+        if (mobile === "") {
+
+            showError("mobile", "mobileError",
+                "Please enter your mobile number.");
+
+            isValid = false;
+
+        } else if (!mobilePattern.test(mobile)) {
+
+            showError("mobile", "mobileError",
+                "Mobile number must contain exactly 10 digits.");
+
+            isValid = false;
+        }
+
+
+        // Age validation
+        const age =
+            Number(document.getElementById("age").value);
+
+        if (!age) {
+
+            showError("age", "ageError",
+                "Please enter your age.");
+
+            isValid = false;
+
+        } else if (age < 18 || age > 100) {
+
+            showError("age", "ageError",
+                "Age must be between 18 and 100.");
+
+            isValid = false;
+        }
+
+
+        // Password validation
+        const password =
+            document.getElementById("password").value;
+
+        if (password === "") {
+
+            showError("password", "passwordError",
+                "Please enter a password.");
+
+            isValid = false;
+
+        } else if (password.length < 8) {
+
+            showError("password", "passwordError",
+                "Password must contain at least 8 characters.");
+
+            isValid = false;
+        }
+
+
+        // Confirm password validation
+        const confirmPassword =
+            document.getElementById("confirmPassword").value;
+
+        if (confirmPassword === "") {
+
+            showError(
+                "confirmPassword",
+                "confirmPasswordError",
+                "Please confirm your password."
+            );
+
+            isValid = false;
+
+        } else if (password !== confirmPassword) {
+
+            showError(
+                "confirmPassword",
+                "confirmPasswordError",
+                "Passwords do not match."
+            );
+
+            isValid = false;
+        }
+
+
+        // Terms validation
+        const terms =
+            document.getElementById("terms").checked;
+
+        if (!terms) {
+
+            document.getElementById("termsError").textContent =
+                "Please accept the Terms and Conditions.";
+
+            isValid = false;
+        }
+
+
+        // Successful registration
+        if (isValid) {
+
+            document.getElementById("successMessage").textContent =
+                "Registration successful!";
+
+            form.reset();
+        }
+
+    });
+
+
+    // Display error
+    function showError(inputId, errorId, message) {
+
+        document.getElementById(inputId)
+            .classList.add("error");
+
+        document.getElementById(errorId)
+            .textContent = message;
+    }
+
+
+    // Clear errors
+    function clearErrors() {
+
+        const errors =
+            document.querySelectorAll(".error-message");
+
+        errors.forEach(function(error) {
+            error.textContent = "";
+        });
+
+
+        const inputs =
+            document.querySelectorAll("input");
+
+        inputs.forEach(function(input) {
+            input.classList.remove("error");
+        });
+
+
+        document.getElementById("successMessage")
+            .textContent = "";
+    }
+
+</script>
+
+</body>
+</html>
